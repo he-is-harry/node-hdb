@@ -69,7 +69,8 @@ describe('Lib', function () {
           statementId: statement.id,
           parameters: {
             types: [TypeCode.INT],
-            values: values
+            values: values,
+            fractions: [undefined]
           }
         });
         rowsAffected.should.equal(1);
@@ -234,7 +235,8 @@ describe('Lib', function () {
         E: undefined
       }).should.eql({
         types: [TypeCode.TINYINT, TypeCode.INT, TypeCode.BIGINT, TypeCode.BIGINT],
-        values: [1, 3, null, undefined]
+        values: [1, 3, null, undefined],
+        fractions: [undefined, undefined, undefined, undefined]
       });
     });
 
