@@ -608,6 +608,72 @@ describe('Lib', function () {
       });
     });
 
+    describe('real vector array nesting', function () {
+      function validateSingleRealVectorInput(values, expected) {
+        var task = createExecuteTask({
+          parameters: {
+            types: [TypeCode.REAL_VECTOR],
+            values: values,
+            lengths: [0]
+          },
+          replies: {}
+        });
+        task.parameterValues.should.eql(expected);
+      }
+  
+      it('should wrap single real vector arguments', function () {
+        validateSingleRealVectorInput([[1, 2, 3]], [[[1, 2, 3]]]);
+      });
+  
+      it('should wrap single null real vector arguments', function () {
+        validateSingleRealVectorInput([null], [[null]]);
+      });
+  
+      it('shoudl wrap buffer real vector arguments', function () {
+        validateSingleRealVectorInput([Buffer.from('010000000000803f', 'hex')], [[Buffer.from('010000000000803f', 'hex')]]);
+      })
+  
+      it('should not wrap single real vector arguments already wrapped', function () {
+        validateSingleRealVectorInput([[[1, 2, 3]]], [[[1, 2, 3]]]);
+      });
+  
+      it('should not wrap single null real vector arguments already wrapped', function () {
+        // null cannot be entered as an element of a vector, so it is always assumed to be the
+        // vector itself
+        validateSingleRealVectorInput([[null]], [[null]]);
+      });
+  
+      it('should not wrap single buffer real vector arguments already wrapped', function () {
+        validateSingleRealVectorInput([[Buffer.from('010000000000803f', 'hex')]], [[Buffer.from('010000000000803f', 'hex')]]);
+      });
+  
+      it('should wrap multiple real vector arguments', function () {
+        var values = [[1, 2], [3, 4]];
+        var task = createExecuteTask({
+          parameters: {
+            types: [TypeCode.REAL_VECTOR, TypeCode.REAL_VECTOR],
+            values: values,
+            lengths: [2, 2]
+          },
+          replies: {}
+        });
+        task.parameterValues.should.eql([[[1, 2], [3, 4]]]);
+      });
+  
+      it('should not wrap multiple real vector arguments already wrapped', function () {
+        var values = [[[1, 2], [3, 4]], [[5, 6], [7, 8]]];
+        var task = createExecuteTask({
+          parameters: {
+            types: [TypeCode.REAL_VECTOR, TypeCode.REAL_VECTOR],
+            values: values,
+            lengths: [2, 2]
+          },
+          replies: {}
+        });
+        task.parameterValues.should.eql([[[1, 2], [3, 4]], [[5, 6], [7, 8]]]);
+      });
+    });
+
   });
 });
 
