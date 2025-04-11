@@ -804,17 +804,16 @@ describe('db', function () {
         ['FAlsE'],
         ['UNknOwn'],
         ['1'],
-        ['0'],
-        [''],
+        ['0']
       ];
       var expected = [{A: true}, {A: null}, {A: false}, {A: true}, {A: true},
         {A: false}, {A: true}, {A: false}, {A: null}, {A: true},
-        {A: false}, {A: null}];
+        {A: false}];
       testDataTypeValid('BOOLEAN_TABLE', insertValues, [28], expected, done);
     });
 
     it('should raise input type error', function (done) {
-      var invalidValues = ['String not boolean', Buffer.from("01", "hex")];
+      var invalidValues = ['String not boolean', Buffer.from("01", "hex"), ''];
       // Add the same expected error message to the values
       var invalidTestData = invalidValues.map(function (testValue) {
         return {value: testValue, errMessage: "Cannot set parameter at row: 1. Wrong input for BOOLEAN type"};
